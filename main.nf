@@ -36,8 +36,6 @@ fastq_pairs_for_fq2bam = Channel.fromFilePairs( params.in_path_fastq + '/*_{fq1,
 fastq_pairs_for_fastqc = Channel.fromFilePairs( params.in_path_fastq + '/*_{fq1,fq2}.fastq.gz', flat: true )
 
 // Channel recalibrated bam
-recalibrated_bam_gridss = Channel.fromPath( params.in_path_bam + '/*.bam')
-recalibrated_bai_gridss = Channel.fromPath( params.in_path_bam + '/*.bai')
 recalibrated_bam_svaba = Channel.fromPath( params.in_path_bam + '/*.bam')
 recalibrated_bai_svaba = Channel.fromPath( params.in_path_bam + '/*.bai')
 
@@ -133,7 +131,6 @@ process FastQC_recalibrated_bam {
     """
     fastqc "${recal_bam}" -o ./
     """
-    //fastqc -t 2 '${recal_bam.simpleName}' -o ./
 }
 
 
@@ -290,26 +287,3 @@ process whamg {
 	"""
 }
 
-
-
-process CollectMultipleMetrics {
-    clusterOptions '--ntasks=1'
-    time '1h'
-    cpus '10'
-    memory '50 GB'
-    queue 'clara-cpu'
-
-    module 'FastQC/0.11.9-Java-11'
-
-    input:
-        file recal_bam from recalibrated_bam_collectmultiplemetrics
-
-    publishDir "${out_path}/WGS_cmm/", mode: 'copy', overwrite: true
-
-    """
-    
-    """
-
-}
-
-*/
