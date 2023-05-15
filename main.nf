@@ -39,31 +39,6 @@ fastq_pairs_for_fastqc = Channel.fromFilePairs( params.in_path_fastq + '/*_{fq1,
 recalibrated_bam_svaba = Channel.fromPath( params.in_path_bam + '/*.bam')
 recalibrated_bai_svaba = Channel.fromPath( params.in_path_bam + '/*.bai')
 
-// Generate read metrics of fastq file using FastQC 
-
-process FastQC {
-    clusterOptions '--ntasks=1'
-    time '24h'
-    cpus '30'
-    memory '8 GB'
-    queue 'clara-cpu'
-
-    module 'FastQC/0.11.9-Java-11'
-
-    input:
-        tuple val(tup_sample_id), file(fastq_r1_input), file(fastq_r2_input) from fastq_pairs_for_fastqc
-
-    output:
-        file "${tup_sample_id}_{fq1,fq2}_fastqc.{html,zip}" into fastqc_for_fastq
-
-    publishDir "${out_path}/WGS_fastqc/", mode: 'copy', overwrite: false
-
-    script:
-    """
-    fastqc -t 2 "${fastq_r1_input}" "${fastq_r2_input}" -o ./
-    """
-}
-
 
 // Generate bam recalibrated file from fastq with parabricks fq2bam
 process fq_bam {
