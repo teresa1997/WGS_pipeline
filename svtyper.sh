@@ -7,4 +7,4 @@ for ID in $IDs
     -o path/$ID.whamg.svtyper.vcf \
     -B path/$ID.fq2bam.bam \
     -T path/references/Homo_sapiens_assembly38.fasta
-    done
+done
